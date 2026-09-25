@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Attendance Management</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            background: none;
+            color: #2563eb;
+            padding: 0;
+        }
+
+        .add-btn {
+            background: #16a34a;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
+        .add-btn:hover {
+            background: #15803d;
+            text-decoration: none;
+        }
+
+        .table-card {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+            overflow-x: auto;
+        }
+
+        .attendance-value {
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .eligible {
+            display: inline-block;
+            background: #dcfce7;
+            color: #15803d;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .low-attendance {
+            display: inline-block;
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .edit-btn {
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .home-btn {
+            display: inline-block;
+            margin-top: 20px;
+            background: #475569;
+            color: white;
+            padding: 10px 17px;
+            border-radius: 7px;
+            text-decoration: none;
+        }
+
+        .home-btn:hover {
+            background: #334155;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Page Header -->
+    <div class="page-header">
+
+        <h1>📊 Attendance Management</h1>
+
+        <a href="/add-attendance" class="add-btn">
+            + Add Attendance
+        </a>
+
+    </div>
+
+
+    <!-- Attendance Table -->
+    <div class="table-card">
+
+        <table>
+
+            <tr>
+                <th>ID</th>
+                <th>Student</th>
+                <th>Subject</th>
+                <th>Attendance %</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+
+            {% for attendance in attendance_data %}
+
+            <tr>
+
+                <td>
+                    {{ attendance.attendance_id }}
+                </td>
+
+                <td>
+                    <strong>{{ attendance.student_name }}</strong>
+                </td>
+
+                <td>
+                    {{ attendance.subject_name }}
+                </td>
+
+                <td class="attendance-value">
+                    {{ attendance.attendance_percentage }}%
+                </td>
+
+                <td>
+
+                    {% if attendance.attendance_percentage >= 75 %}
+
+                        <span class="eligible">
+                            ✓ Eligible
+                        </span>
+
+                    {% else %}
+
+                        <span class="low-attendance">
+                            ⚠ Low Attendance
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    <a href="/edit-attendance/{{ attendance.attendance_id }}"
+                       class="edit-btn">
+                        ✏️ Edit
+                    </a>
+
+                    &nbsp; | &nbsp;
+
+                    <a href="/delete-attendance/{{ attendance.attendance_id }}"
+                       class="delete-btn"
+                       onclick="return confirm('Delete this attendance record?');">
+                        🗑️ Delete
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+
+    <!-- Back Button -->
+    <a href="/" class="home-btn">
+        ← Back to Home
+    </a>
+
+</div>
+
+</body>
+</html>

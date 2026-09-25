@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Analytics Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        body {
+            background: #f4f7fb;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+        }
+
+        .dashboard-header h1 {
+            background: none;
+            padding: 0;
+            margin: 0 0 8px;
+            font-size: 30px;
+        }
+
+        .dashboard-header p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 18px;
+            background: white;
+            color: #2563eb;
+            padding: 9px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background: #f1f5f9;
+            text-decoration: none;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .stat-card h2 {
+            margin: 0;
+            font-size: 30px;
+            color: #2563eb;
+        }
+
+        .stat-card p {
+            margin: 8px 0 0;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .section {
+            background: white;
+            padding: 22px;
+            margin-bottom: 25px;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+        }
+
+        .section h2 {
+            margin-top: 0;
+            color: #2563eb;
+        }
+
+        .pass-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #eff6ff;
+            padding: 18px 20px;
+            border-radius: 10px;
+            border-left: 5px solid #2563eb;
+        }
+
+        .pass-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #16a34a;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            min-height: 300px;
+            margin-bottom: 25px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: #2563eb;
+            color: white;
+            padding: 13px;
+            text-align: center;
+        }
+
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .value {
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        @media (max-width: 900px) {
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-header h1 {
+                font-size: 24px;
+            }
+
+            .pass-box {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Dashboard Header -->
+
+    <div class="dashboard-header">
+
+        <a href="/" class="back-btn">
+            ← Back to Home
+        </a>
+
+        <h1>📊 Student Performance Analytics</h1>
+
+        <p>
+            Overview of student performance, attendance and subject analytics
+        </p>
+
+    </div>
+
+
+    <!-- Summary Cards -->
+
+    <div class="cards">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">👨‍🎓</div>
+
+            <h2>{{ total_students }}</h2>
+
+            <p>Total Students</p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">📚</div>
+
+            <h2>{{ total_subjects }}</h2>
+
+            <p>Total Subjects</p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">📝</div>
+
+            <h2>{{ average_marks }}</h2>
+
+            <p>Average Marks</p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">📅</div>
+
+            <h2>{{ average_attendance }}%</h2>
+
+            <p>Average Attendance</p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Overall Performance -->
+
+    <div class="section">
+
+        <h2>🎯 Overall Performance</h2>
+
+        <div class="pass-box">
+
+            <div>
+
+                <strong>Overall Pass Percentage</strong>
+
+                <p>
+                    Percentage of students meeting the passing criteria
+                </p>
+
+            </div>
+
+            <div class="pass-value">
+                {{ pass_percentage }}%
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Student Performance -->
+
+    <div class="section">
+
+        <h2>👨‍🎓 Student-wise Average Marks</h2>
+
+        <div class="chart-container">
+
+            <canvas id="studentChart"></canvas>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <tr>
+                    <th>Student Name</th>
+                    <th>Average Marks</th>
+                </tr>
+
+                {% for student in student_performance %}
+
+                <tr>
+
+                    <td>
+                        <strong>{{ student.name }}</strong>
+                    </td>
+
+                    <td class="value">
+                        {{ "%.2f"|format(student.average_marks) }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- Subject Performance -->
+
+    <div class="section">
+
+        <h2>📚 Subject-wise Average Marks</h2>
+
+        <div class="chart-container">
+
+            <canvas id="subjectChart"></canvas>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <tr>
+                    <th>Subject</th>
+                    <th>Average Marks</th>
+                </tr>
+
+                {% for subject in subject_performance %}
+
+                <tr>
+
+                    <td>
+                        <strong>{{ subject.subject_name }}</strong>
+                    </td>
+
+                    <td class="value">
+                        {{ "%.2f"|format(subject.average_marks) }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Chart.js -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const studentNames = {{ student_names | tojson }};
+const studentMarks = {{ student_marks | tojson }};
+
+const subjectNames = {{ subject_names | tojson }};
+const subjectMarks = {{ subject_marks | tojson }};
+
+
+// Student Chart
+
+new Chart(
+    document.getElementById("studentChart"),
+    {
+        type: "bar",
+
+        data: {
+
+            labels: studentNames,
+
+            datasets: [{
+                label: "Average Marks",
+                data: studentMarks
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            scales: {
+
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+
+            }
+
+        }
+
+    }
+);
+
+
+// Subject Chart
+
+new Chart(
+    document.getElementById("subjectChart"),
+    {
+        type: "bar",
+
+        data: {
+
+            labels: subjectNames,
+
+            datasets: [{
+                label: "Subject Average Marks",
+                data: subjectMarks
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            scales: {
+
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+
+            }
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>

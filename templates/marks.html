@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Marks Management</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            background: none;
+            color: #2563eb;
+            padding: 0;
+        }
+
+        .add-btn {
+            background: #16a34a;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
+        .add-btn:hover {
+            background: #15803d;
+            text-decoration: none;
+        }
+
+        .table-card {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+            overflow-x: auto;
+        }
+
+        .marks-value {
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .edit-btn {
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .home-btn {
+            display: inline-block;
+            margin-top: 20px;
+            background: #475569;
+            color: white;
+            padding: 10px 17px;
+            border-radius: 7px;
+            text-decoration: none;
+        }
+
+        .home-btn:hover {
+            background: #334155;
+            text-decoration: none;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <h1>
+            📝 Marks Management
+        </h1>
+
+        <a href="/add-marks" class="add-btn">
+            + Add Marks
+        </a>
+
+    </div>
+
+
+    <!-- MARKS TABLE -->
+
+    <div class="table-card">
+
+        <table>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Student</th>
+
+                <th>Subject</th>
+
+                <th>Marks</th>
+
+                <th>Actions</th>
+
+            </tr>
+
+
+            {% for mark in marks %}
+
+            <tr>
+
+                <td>
+                    {{ mark.mark_id }}
+                </td>
+
+                <td>
+                    <strong>{{ mark.student_name }}</strong>
+                </td>
+
+                <td>
+                    {{ mark.subject_name }}
+                </td>
+
+                <td class="marks-value">
+                    {{ mark.marks }}
+                </td>
+
+                <td>
+
+                    <a
+                        href="/edit-marks/{{ mark.mark_id }}"
+                        class="edit-btn"
+                    >
+                        ✏️ Edit
+                    </a>
+
+                    &nbsp; | &nbsp;
+
+                    <a
+                        href="/delete-marks/{{ mark.mark_id }}"
+                        class="delete-btn"
+                        onclick="return confirm('Delete these marks?');"
+                    >
+                        🗑️ Delete
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+
+    <!-- BACK HOME -->
+
+    <a href="/" class="home-btn">
+        ← Back to Home
+    </a>
+
+
+</div>
+
+</body>
+
+</html>

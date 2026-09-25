@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Management</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            background: none;
+            color: #2563eb;
+            padding: 0;
+        }
+
+        .add-btn {
+            background: #16a34a;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
+        .add-btn:hover {
+            background: #15803d;
+            text-decoration: none;
+        }
+
+        .search-box {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 70%;
+            max-width: 500px;
+        }
+
+        .edit-btn {
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .home-btn {
+            display: inline-block;
+            margin-top: 20px;
+            background: #475569;
+            color: white;
+            padding: 10px 17px;
+            border-radius: 7px;
+            text-decoration: none;
+        }
+
+        .home-btn:hover {
+            background: #334155;
+            text-decoration: none;
+        }
+
+        .table-card {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+            overflow-x: auto;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <h1>
+            👨‍🎓 Student Management
+        </h1>
+
+        <a href="/add-student" class="add-btn">
+            + Add New Student
+        </a>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+        <form method="GET" action="/students">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="🔍 Search by name or email"
+                value="{{ search }}"
+            >
+
+            <button type="submit">
+                Search
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- STUDENT TABLE -->
+
+    <div class="table-card">
+
+        <table>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Name</th>
+
+                <th>Email</th>
+
+                <th>Department</th>
+
+                <th>Year</th>
+
+                <th>Actions</th>
+
+            </tr>
+
+
+            {% for student in students %}
+
+            <tr>
+
+                <td>
+                    {{ student.student_id }}
+                </td>
+
+                <td>
+                    <strong>{{ student.name }}</strong>
+                </td>
+
+                <td>
+                    {{ student.email }}
+                </td>
+
+                <td>
+                    {{ student.department }}
+                </td>
+
+                <td>
+                    Year {{ student.year }}
+                </td>
+
+                <td>
+
+                    <a
+                        href="/edit-student/{{ student.student_id }}"
+                        class="edit-btn"
+                    >
+                        ✏️ Edit
+                    </a>
+
+                    &nbsp; | &nbsp;
+
+                    <a
+                        href="/delete-student/{{ student.student_id }}"
+                        class="delete-btn"
+                        onclick="return confirm('Are you sure you want to delete this student?');"
+                    >
+                        🗑️ Delete
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+
+    <!-- BACK HOME -->
+
+    <a href="/" class="home-btn">
+        ← Back to Home
+    </a>
+
+
+</div>
+
+</body>
+
+</html>

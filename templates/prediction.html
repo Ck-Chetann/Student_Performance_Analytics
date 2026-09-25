@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Performance Prediction</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        body {
+            background: #f4f7fb;
+        }
+
+        .prediction-wrapper {
+            max-width: 600px;
+            margin: 40px auto;
+        }
+
+        .prediction-card {
+            background: white;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.09);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            background: none;
+            color: #2563eb;
+            padding: 0;
+            margin: 0 0 10px;
+            font-size: 30px;
+        }
+
+        .header p {
+            color: #64748b;
+            margin: 0;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 25px;
+            background: #475569;
+            color: white;
+            padding: 9px 15px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background: #334155;
+            text-decoration: none;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            margin: 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.10);
+        }
+
+        .predict-btn {
+            width: 100%;
+            padding: 13px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .predict-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .info-box {
+            margin-top: 22px;
+            padding: 15px;
+            background: #eff6ff;
+            border-radius: 9px;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 18px;
+            text-align: center;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .result-pass {
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #86efac;
+        }
+
+        .result-fail {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+        }
+
+        .result-invalid {
+            background: #fef3c7;
+            color: #b45309;
+            border: 1px solid #fcd34d;
+        }
+
+        @media (max-width: 600px) {
+
+            .prediction-wrapper {
+                margin: 20px auto;
+            }
+
+            .prediction-card {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="prediction-wrapper">
+
+    <div class="prediction-card">
+
+        <!-- Back Button -->
+
+        <a href="/" class="back-btn">
+            ← Back to Home
+        </a>
+
+
+        <!-- Header -->
+
+        <div class="header">
+
+            <h1>🤖 Student Performance Prediction</h1>
+
+            <p>
+                Enter student details to predict the academic result.
+            </p>
+
+        </div>
+
+
+        <!-- Prediction Form -->
+
+        <form method="POST">
+
+            <div class="form-group">
+
+                <label>
+                    📅 Attendance Percentage
+                </label>
+
+                <input
+                    type="number"
+                    name="attendance"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    placeholder="Enter attendance (0-100)"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    📝 Average Marks
+                </label>
+
+                <input
+                    type="number"
+                    name="average_marks"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    placeholder="Enter average marks (0-100)"
+                    required
+                >
+
+            </div>
+
+
+            <button type="submit" class="predict-btn">
+                🔮 Predict Result
+            </button>
+
+        </form>
+
+
+        <!-- Information -->
+
+        <div class="info-box">
+
+            <strong>How it works:</strong>
+
+            <br>
+
+            The system uses a Decision Tree Machine Learning model
+            based on attendance and average marks to predict PASS or FAIL.
+
+        </div>
+
+
+        <!-- Prediction Result -->
+
+        {% if result %}
+
+            {% if result == "PASS" %}
+
+                <div class="result result-pass">
+                    ✅ Prediction: PASS
+                </div>
+
+            {% elif result == "FAIL" %}
+
+                <div class="result result-fail">
+                    ❌ Prediction: FAIL
+                </div>
+
+            {% else %}
+
+                <div class="result result-invalid">
+                    ⚠️ {{ result }}
+                </div>
+
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

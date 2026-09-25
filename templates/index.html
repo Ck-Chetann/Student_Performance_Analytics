@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Performance Management System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        body {
+            background: #f4f7fb;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            padding: 45px 30px;
+            border-radius: 18px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .hero h1 {
+            background: none;
+            padding: 0;
+            margin: 0 0 12px;
+            font-size: 38px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin: 0;
+            opacity: 0.95;
+        }
+
+        .section-title {
+            text-align: center;
+            margin: 30px 0 20px;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+        }
+
+        .module-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+            transition: all 0.25s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .module-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.13);
+        }
+
+        .module-icon {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .module-card h3 {
+            margin: 8px 0;
+            color: #1e293b;
+        }
+
+        .module-card p {
+            color: #64748b;
+            min-height: 45px;
+        }
+
+        .module-card a {
+            display: inline-block;
+            margin-top: 10px;
+            background: #2563eb;
+            color: white;
+            padding: 9px 15px;
+            border-radius: 7px;
+            text-decoration: none;
+        }
+
+        .module-card a:hover {
+            background: #1d4ed8;
+            text-decoration: none;
+        }
+
+        .info-card {
+            background: white;
+            padding: 25px;
+            margin-top: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+        }
+
+        .footer {
+            text-align: center;
+            margin: 35px 0 15px;
+            color: #64748b;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- HERO SECTION -->
+
+    <div class="hero">
+
+        <h1>
+            🎓 Student Performance Management System
+        </h1>
+
+        <p>
+            Manage students, subjects, marks, attendance
+            and performance analytics in one place.
+        </p>
+
+    </div>
+
+
+    <!-- MODULES -->
+
+    <div class="section-title">
+
+        <h2>
+            System Modules
+        </h2>
+
+        <p>
+            Select a module to continue
+        </p>
+
+    </div>
+
+
+    <div class="module-grid">
+
+
+        <!-- Student -->
+
+        <div class="module-card">
+
+            <div class="module-icon">
+                👨‍🎓
+            </div>
+
+            <h3>
+                Student Management
+            </h3>
+
+            <p>
+                Add, edit, delete and search student records.
+            </p>
+
+            <a href="/students">
+                Open Module →
+            </a>
+
+        </div>
+
+
+        <!-- Subjects -->
+
+        <div class="module-card">
+
+            <div class="module-icon">
+                📚
+            </div>
+
+            <h3>
+                Subject Management
+            </h3>
+
+            <p>
+                Manage subjects and their credit information.
+            </p>
+
+            <a href="/subjects">
+                Open Module →
+            </a>
+
+        </div>
+
+
+        <!-- Marks -->
+
+        <div class="module-card">
+
+            <div class="module-icon">
+                📝
+            </div>
+
+            <h3>
+                Marks Management
+            </h3>
+
+            <p>
+                Record and manage student marks.
+            </p>
+
+            <a href="/marks">
+                Open Module →
+            </a>
+
+        </div>
+
+
+        <!-- Attendance -->
+
+        <div class="module-card">
+
+            <div class="module-icon">
+                📅
+            </div>
+
+            <h3>
+                Attendance Management
+            </h3>
+
+            <p>
+                Track attendance and eligibility status.
+            </p>
+
+            <a href="/attendance">
+                Open Module →
+            </a>
+
+        </div>
+
+
+        <!-- Performance -->
+
+        <div class="module-card">
+
+            <div class="module-icon">
+                📈
+            </div>
+
+            <h3>
+                Student Performance
+            </h3>
+
+            <p>
+                View average marks and performance status.
+            </p>
+
+            <a href="/performance">
+                View Performance →
+            </a>
+
+        </div>
+
+
+        <!-- Dashboard -->
+
+        <div class="module-card">
+
+            <div class="module-icon">
+                📊
+            </div>
+
+            <h3>
+                Analytics Dashboard
+            </h3>
+
+            <p>
+                Analyze marks, attendance and performance.
+            </p>
+
+            <a href="/dashboard">
+                Open Dashboard →
+            </a>
+
+        </div>
+
+
+        <!-- ML -->
+
+        <div class="module-card">
+
+            <div class="module-icon">
+                🤖
+            </div>
+
+            <h3>
+                ML Performance Prediction
+            </h3>
+
+            <p>
+                Predict student result using Machine Learning.
+            </p>
+
+            <a href="/prediction">
+                Predict Result →
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- PROJECT INFORMATION -->
+
+    <div class="info-card">
+
+        <h2>
+            📌 Project Information
+        </h2>
+
+        <p>
+            This application is developed using
+            <strong>Python Flask, MySQL, Pandas and Machine Learning.</strong>
+        </p>
+
+        <p>
+            It provides student data management,
+            academic analysis, visualization and
+            performance prediction.
+        </p>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        Student Performance Management System
+        | DBMS + AI & Data Science Project
+
+    </div>
+
+
+</div>
+
+</body>
+
+</html>
