@@ -5,7 +5,8 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Marks Management</title>
 
@@ -20,7 +21,7 @@
             align-items: center;
             margin-bottom: 20px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
         }
 
         .page-header h1 {
@@ -43,12 +44,187 @@
             text-decoration: none;
         }
 
+        /* Search */
+
+        .search-card {
+            background: white;
+            padding: 18px;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-form input {
+            flex: 1;
+            min-width: 220px;
+            margin: 0;
+            padding: 11px 14px;
+        }
+
+        .search-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .clear-btn {
+            background: #64748b;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 7px;
+            text-decoration: none;
+        }
+
+        /* Table */
+
         .table-card {
             background: white;
             padding: 20px;
             border-radius: 14px;
             box-shadow: 0 5px 18px rgba(0,0,0,0.08);
             overflow-x: auto;
+        }
+
+        .main-table {
+            margin-top: 0;
+        }
+
+        .student-name {
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .average-value {
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .subject-count {
+            font-weight: bold;
+            color: #475569;
+        }
+
+        /* Status */
+
+        .status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .excellent {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .good {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .average {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .needs-improvement {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* View Button */
+
+        .view-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .view-btn:hover {
+            background: #1d4ed8;
+        }
+
+        /* Detail Row */
+
+        .detail-row {
+            display: none;
+        }
+
+        .detail-row.show {
+            display: table-row;
+        }
+
+        .detail-cell {
+            padding: 0 !important;
+            background: #f8fafc;
+            border-bottom: 2px solid #dbeafe;
+        }
+
+        .details-box {
+            margin: 15px 20px;
+            padding: 18px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #dbeafe;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+        }
+
+        .details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .details-title {
+            margin: 0;
+            color: #2563eb;
+            font-size: 18px;
+        }
+
+        .close-btn {
+            background: #64748b;
+            color: white;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            background: #475569;
+        }
+
+        .details-table {
+            width: 100%;
+            margin: 0;
+        }
+
+        .details-table th {
+            background: #475569;
+            color: white;
+            padding: 10px;
+        }
+
+        .details-table td {
+            padding: 10px;
         }
 
         .marks-value {
@@ -66,6 +242,16 @@
             font-weight: bold;
         }
 
+        .average-row {
+            background: #f1f5f9;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+
         .home-btn {
             display: inline-block;
             margin-top: 20px;
@@ -81,6 +267,20 @@
             text-decoration: none;
         }
 
+        @media (max-width: 700px) {
+
+            .table-card {
+                padding: 12px;
+            }
+
+            .details-box {
+                margin: 10px;
+                padding: 12px;
+                min-width: 500px;
+            }
+
+        }
+
     </style>
 
 </head>
@@ -90,81 +290,271 @@
 
 <div class="container">
 
-
-    <!-- HEADER -->
+    <!-- Header -->
 
     <div class="page-header">
 
-        <h1>
-            📝 Marks Management
-        </h1>
+        <h1>📝 Marks Management</h1>
 
-        <a href="/add-marks" class="add-btn">
+        <a href="/add-marks"
+           class="add-btn">
             + Add Marks
         </a>
 
     </div>
 
 
-    <!-- MARKS TABLE -->
+    <!-- Search -->
+
+    <div class="search-card">
+
+        <form method="GET"
+              action="/marks"
+              class="search-form">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="🔍 Search student name..."
+                value="{{ search }}"
+            >
+
+            <button
+                type="submit"
+                class="search-btn">
+                🔍 Search
+            </button>
+
+            {% if search %}
+
+            <a href="/marks"
+               class="clear-btn">
+                ✕ Clear
+            </a>
+
+            {% endif %}
+
+        </form>
+
+    </div>
+
+
+    <!-- Main Student Table -->
 
     <div class="table-card">
 
-        <table>
+        {% if students %}
+
+        <table class="main-table">
 
             <tr>
 
                 <th>ID</th>
 
-                <th>Student</th>
+                <th>Student Name</th>
 
-                <th>Subject</th>
+                <th>Total Subjects</th>
 
-                <th>Marks</th>
+                <th>Average Marks</th>
 
-                <th>Actions</th>
+                <th>Status</th>
+
+                <th>Details</th>
 
             </tr>
 
 
-            {% for mark in marks %}
+            {% for student in students %}
+
+            <!-- Student Summary Row -->
 
             <tr>
 
                 <td>
-                    {{ mark.mark_id }}
+                    {{ student.student_id }}
+                </td>
+
+                <td class="student-name">
+                    {{ student.name }}
+                </td>
+
+                <td class="subject-count">
+                    {{ student.total_subjects }}
+                </td>
+
+                <td class="average-value">
+                    {{ "%.2f"|format(student.average_marks) }}%
                 </td>
 
                 <td>
-                    <strong>{{ mark.student_name }}</strong>
+
+                    {% if student.average_marks >= 75 %}
+
+                        <span class="status excellent">
+                            ⭐ Excellent
+                        </span>
+
+                    {% elif student.average_marks >= 60 %}
+
+                        <span class="status good">
+                            👍 Good
+                        </span>
+
+                    {% elif student.average_marks >= 40 %}
+
+                        <span class="status average">
+                            📊 Average
+                        </span>
+
+                    {% else %}
+
+                        <span class="status needs-improvement">
+                            ⚠ Needs Improvement
+                        </span>
+
+                    {% endif %}
+
                 </td>
 
                 <td>
-                    {{ mark.subject_name }}
+
+                    <button
+                        class="view-btn"
+                        onclick="toggleDetails('{{ student.student_id }}', this)">
+
+                        👁 View Details
+
+                    </button>
+
                 </td>
 
-                <td class="marks-value">
-                    {{ mark.marks }}
-                </td>
+            </tr>
 
-                <td>
 
-                    <a
-                        href="/edit-marks/{{ mark.mark_id }}"
-                        class="edit-btn"
-                    >
-                        ✏️ Edit
-                    </a>
+            <!-- Separate Details Row -->
 
-                    &nbsp; | &nbsp;
+            <tr
+                id="details-{{ student.student_id }}"
+                class="detail-row">
 
-                    <a
-                        href="/delete-marks/{{ mark.mark_id }}"
-                        class="delete-btn"
-                        onclick="return confirm('Delete these marks?');"
-                    >
-                        🗑️ Delete
-                    </a>
+                <td
+                    colspan="6"
+                    class="detail-cell">
+
+                    <div class="details-box">
+
+                        <div class="details-header">
+
+                            <h3 class="details-title">
+
+                                📚 {{ student.name }}
+                                — Subject-wise Marks
+
+                            </h3>
+
+                            <button
+                                class="close-btn"
+                                onclick="toggleDetails('{{ student.student_id }}')">
+
+                                ✕ Close
+
+                            </button>
+
+                        </div>
+
+
+                        <table class="details-table">
+
+                            <tr>
+
+                                <th>#</th>
+
+                                <th>Subject</th>
+
+                                <th>Marks</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+
+                            {% for subject in student.subjects %}
+
+                            <tr>
+
+                                <td>
+                                    {{ loop.index }}
+                                </td>
+
+                                <td>
+
+                                    <strong>
+                                        {{ subject.subject_name }}
+                                    </strong>
+
+                                </td>
+
+                                <td class="marks-value">
+
+                                    {{ subject.marks }}
+
+                                </td>
+
+                                <td>
+
+                                    <a
+                                        href="/edit-marks/{{ subject.mark_id }}"
+                                        class="edit-btn">
+
+                                        ✏️ Edit
+
+                                    </a>
+
+                                    &nbsp; | &nbsp;
+
+                                    <a
+                                        href="/delete-marks/{{ subject.mark_id }}"
+                                        class="delete-btn"
+                                        onclick="return confirm('Delete these marks?');">
+
+                                        🗑️ Delete
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+
+                            <!-- Average -->
+
+                            <tr class="average-row">
+
+                                <td colspan="2">
+
+                                    <strong>
+                                        Average Marks
+                                    </strong>
+
+                                </td>
+
+                                <td class="marks-value">
+
+                                    <strong>
+                                        {{ "%.2f"|format(student.average_marks) }}
+                                    </strong>
+
+                                </td>
+
+                                <td></td>
+
+                            </tr>
+
+                        </table>
+
+                    </div>
 
                 </td>
 
@@ -174,17 +564,93 @@
 
         </table>
 
+
+        {% else %}
+
+        <div class="no-data">
+
+            <h3>📭 No marks found</h3>
+
+            {% if search %}
+
+                <p>
+                    No student found for
+                    "<strong>{{ search }}</strong>"
+                </p>
+
+            {% else %}
+
+                <p>
+                    No marks records available.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
     </div>
 
-
-    <!-- BACK HOME -->
 
     <a href="/" class="home-btn">
         ← Back to Home
     </a>
 
-
 </div>
+
+
+<!-- JavaScript -->
+
+<script>
+
+function toggleDetails(studentId, button) {
+
+    const row = document.getElementById(
+        "details-" + studentId
+    );
+
+    if (!row) {
+        return;
+    }
+
+    const isOpen = row.classList.contains("show");
+
+    // Close all detail rows first
+    document.querySelectorAll(".detail-row").forEach(
+        function(detailRow) {
+
+            detailRow.classList.remove("show");
+
+        }
+    );
+
+    // Reset all buttons
+    document.querySelectorAll(".view-btn").forEach(
+        function(viewButton) {
+
+            viewButton.innerHTML = "👁 View Details";
+
+        }
+    );
+
+    // Open selected row
+    if (!isOpen) {
+
+        row.classList.add("show");
+
+        if (button) {
+
+            button.innerHTML = "👁 Hide Details";
+
+        }
+
+    }
+
+}
+
+</script>
+
 
 </body>
 

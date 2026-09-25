@@ -359,45 +359,118 @@ def delete_subject(subject_id):
     return redirect("/subjects")
 
 # ==========================================
-# VIEW MARKS
+# VIEW MARKS - STUDENT WISE
 # ==========================================
 
 @app.route("/marks")
 def marks():
 
-    db = get_db_connection()
+    search = request.args.get("search", "").strip()
 
+    db = get_db_connection()
     cursor = db.cursor(dictionary=True)
 
-    query = """
-    SELECT
-        marks.mark_id,
-        marks.student_id,
-        marks.subject_id,
-        students.name AS student_name,
-        subjects.subject_name,
-        marks.marks
-    FROM marks
+    if search:
+        query = """
+        SELECT
+            marks.mark_id,
+            marks.student_id,
+            marks.subject_id,
+            students.name AS student_name,
+            subjects.subject_name,
+            marks.marks
+        FROM marks
 
-    INNER JOIN students
-        ON marks.student_id = students.student_id
+        INNER JOIN students
+            ON marks.student_id = students.student_id
 
-    INNER JOIN subjects
-        ON marks.subject_id = subjects.subject_id
+        INNER JOIN subjects
+            ON marks.subject_id = subjects.subject_id
 
-    ORDER BY marks.mark_id
-    """
+        WHERE students.name LIKE %s
 
-    cursor.execute(query)
+        ORDER BY students.name, subjects.subject_name
+        """
+
+        cursor.execute(
+            query,
+            (f"%{search}%",)
+        )
+
+    else:
+        query = """
+        SELECT
+            marks.mark_id,
+            marks.student_id,
+            marks.subject_id,
+            students.name AS student_name,
+            subjects.subject_name,
+            marks.marks
+        FROM marks
+
+        INNER JOIN students
+            ON marks.student_id = students.student_id
+
+        INNER JOIN subjects
+            ON marks.subject_id = subjects.subject_id
+
+        ORDER BY students.name, subjects.subject_name
+        """
+
+        cursor.execute(query)
 
     marks_data = cursor.fetchall()
+
+    # ------------------------------------------
+    # Group marks student-wise
+    # ------------------------------------------
+
+    students_data = {}
+
+    for mark in marks_data:
+
+        student_id = mark["student_id"]
+
+        if student_id not in students_data:
+
+            students_data[student_id] = {
+                "student_id": student_id,
+                "name": mark["student_name"],
+                "subjects": [],
+                "total_subjects": 0,
+                "average_marks": 0
+            }
+
+        students_data[student_id]["subjects"].append(mark)
+
+    # ------------------------------------------
+    # Calculate student averages
+    # ------------------------------------------
+
+    for student in students_data.values():
+
+        marks_list = [
+            float(subject["marks"])
+            for subject in student["subjects"]
+        ]
+
+        student["total_subjects"] = len(marks_list)
+
+        if marks_list:
+            student["average_marks"] = round(
+                sum(marks_list) / len(marks_list),
+                2
+            )
+
+    students_data = list(students_data.values())
 
     cursor.close()
     db.close()
 
     return render_template(
         "marks.html",
-        marks=marks_data
+        students=students_data,
+        search=search
     )
 
 
@@ -558,46 +631,123 @@ def delete_marks(mark_id):
 
     return redirect("/marks")
 
+
 # ==========================================
-# VIEW ATTENDANCE
+# VIEW ATTENDANCE - STUDENT WISE
 # ==========================================
 
 @app.route("/attendance")
 def attendance():
 
-    db = get_db_connection()
+    search = request.args.get("search", "").strip()
 
+    db = get_db_connection()
     cursor = db.cursor(dictionary=True)
 
-    query = """
-    SELECT
-        attendance.attendance_id,
-        attendance.student_id,
-        attendance.subject_id,
-        students.name AS student_name,
-        subjects.subject_name,
-        attendance.attendance_percentage
-    FROM attendance
+    if search:
 
-    INNER JOIN students
-        ON attendance.student_id = students.student_id
+        query = """
+        SELECT
+            attendance.attendance_id,
+            attendance.student_id,
+            attendance.subject_id,
+            students.name AS student_name,
+            subjects.subject_name,
+            attendance.attendance_percentage
+        FROM attendance
 
-    INNER JOIN subjects
-        ON attendance.subject_id = subjects.subject_id
+        INNER JOIN students
+            ON attendance.student_id = students.student_id
 
-    ORDER BY attendance.attendance_id
-    """
+        INNER JOIN subjects
+            ON attendance.subject_id = subjects.subject_id
 
-    cursor.execute(query)
+        WHERE students.name LIKE %s
+
+        ORDER BY students.name, subjects.subject_name
+        """
+
+        cursor.execute(
+            query,
+            (f"%{search}%",)
+        )
+
+    else:
+
+        query = """
+        SELECT
+            attendance.attendance_id,
+            attendance.student_id,
+            attendance.subject_id,
+            students.name AS student_name,
+            subjects.subject_name,
+            attendance.attendance_percentage
+        FROM attendance
+
+        INNER JOIN students
+            ON attendance.student_id = students.student_id
+
+        INNER JOIN subjects
+            ON attendance.subject_id = subjects.subject_id
+
+        ORDER BY students.name, subjects.subject_name
+        """
+
+        cursor.execute(query)
 
     attendance_data = cursor.fetchall()
+
+    # ------------------------------------------
+    # Group attendance student-wise
+    # ------------------------------------------
+
+    students_data = {}
+
+    for record in attendance_data:
+
+        student_id = record["student_id"]
+
+        if student_id not in students_data:
+
+            students_data[student_id] = {
+                "student_id": student_id,
+                "name": record["student_name"],
+                "subjects": [],
+                "total_subjects": 0,
+                "average_attendance": 0
+            }
+
+        students_data[student_id]["subjects"].append(record)
+
+    # ------------------------------------------
+    # Calculate average attendance
+    # ------------------------------------------
+
+    for student in students_data.values():
+
+        attendance_list = [
+            float(subject["attendance_percentage"])
+            for subject in student["subjects"]
+        ]
+
+        student["total_subjects"] = len(attendance_list)
+
+        if attendance_list:
+
+            student["average_attendance"] = round(
+                sum(attendance_list) / len(attendance_list),
+                2
+            )
+
+    students_data = list(students_data.values())
 
     cursor.close()
     db.close()
 
     return render_template(
         "attendance.html",
-        attendance_data=attendance_data
+        students=students_data,
+        search=search
     )
 
 
